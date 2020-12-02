@@ -10,7 +10,7 @@ script:
   - hexo generate # generate static files test
 deploy:
   provider: pages
-  skip-cleanup: true
+  skip-cleanup: tru
   github-token: $GH_TOKEN
   keep-history: false
   on:
