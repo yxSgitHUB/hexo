@@ -1,7 +1,9 @@
 ---
-title: [工具分享]HomebrewCN 国内自动安装脚本
+title: HomebrewCN 国内自动安装脚本
 date: 2020-12-02 11:49:06
-tags:
+tags: 工具分享
+categories:
+  - 工具分享
 ---
 HomebrewCN
 Homebrew 国内自动安装脚本
