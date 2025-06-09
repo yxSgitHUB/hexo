@@ -11,6 +11,9 @@ importers:
       hexo:
         specifier: ^5.0.0
         version: 5.4.2(chokidar@3.6.0)
+      hexo-deployer-git:
+        specifier: ^4.0.0
+        version: 4.0.0(chokidar@3.6.0)
       hexo-generator-archive:
         specifier: ^1.0.0
         version: 1.0.0
@@ -316,6 +319,10 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
 
+  hexo-deployer-git@4.0.0:
+    resolution: {integrity: sha512-28t1Q+4taB/UaBAP52W3mD/wcCwa2y2zBieUfBJFBZudbmVgiKJB5YedYILeyI5QByaUKAOwoupmdTbocdQ+CQ==}
+    engines: {node: '>=14'}
+
   hexo-front-matter@2.0.0:
     resolution: {integrity: sha512-IR3tjAyK2Ga/0a/WDAoNy5+n3ju2/mkuAsCDEeGgGLf5+7kkiOkkG/FrnueuYgz0h2MPfWDLBiDsSTCmB0sLCA==}
     engines: {node: '>=10.13.0'}
@@ -466,6 +473,10 @@ packages:
 
   lower-case@2.0.2:
     resolution: {integrity: sha512-7fm3l3NAF9WfN6W3JOmf5drwpVqX78JtoGJ3A6W0a6ZnldM41w2fV5D490psKFTpMds8TJse/eHLFFsNHHjHgg==}
+
+  luxon@3.6.1:
+    resolution: {integrity: sha512-tJLxrKJhO2ukZ5z0gyjY1zPh3Rh88Ej9P7jNrZiHMUXHae1yvI2imgOZtL1TO8TW6biMMKfTtAOoEJANgtWBMQ==}
+    engines: {node: '>=12'}
 
   marked@1.2.9:
     resolution: {integrity: sha512-H8lIX2SvyitGX+TRdtS06m1jHMijKN/XjfH6Ooii9fvxMlh8QdqBfBDkGUpMWH2kQNrtixjzYUa3SH8ROTgRRw==}
@@ -1037,6 +1048,17 @@ snapshots:
       resolve: 1.22.10
       tildify: 2.0.0
 
+  hexo-deployer-git@4.0.0(chokidar@3.6.0):
+    dependencies:
+      bluebird: 3.7.2
+      hexo-fs: 4.1.3
+      hexo-util: 2.7.0
+      luxon: 3.6.1
+      nunjucks: 3.2.4(chokidar@3.6.0)
+      picocolors: 1.1.1
+    transitivePeerDependencies:
+      - chokidar
+
   hexo-front-matter@2.0.0:
     dependencies:
       js-yaml: 3.14.1
@@ -1238,6 +1260,8 @@ snapshots:
   lower-case@2.0.2:
     dependencies:
       tslib: 2.8.1
+
+  luxon@3.6.1: {}
 
   marked@1.2.9: {}
 
