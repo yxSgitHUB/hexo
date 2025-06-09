@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/hexo/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/hexo/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/hexo/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/hexo/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/hexo/css/main.css">
+
+
+<link rel="stylesheet" href="/hexo/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yxsgithub.github.io","root":"/hexo/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="这篇博客的目的是记录与总结，从刚工作开始，一直到现在。持续更新ing。 我于2017年参加工作，很幸运的抓到了JQuery的尾巴。入职的公司比较小，同时技术leader没有指定技术栈，所以上来就开始用JQ开发一些小型项目，比如应用内内置的充值提现h5，宣传报名h5，电子医保卡等等。 当时对于项目的组织没有什么概念，这个状态我觉得可以称之为「负一层」。 记得比较清楚，当时是在做外包，给市民卡做电子医">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何组织一个项目（1）">
+<meta property="og:url" content="https://yxsgithub.github.io/hexo/2021/01/04/%E5%A6%82%E4%BD%95%E7%BB%84%E7%BB%87%E4%B8%80%E4%B8%AA%E9%A1%B9%E7%9B%AE%EF%BC%881%EF%BC%89/index.html">
+<meta property="og:site_name" content="Moonkin&#39;s Hexo">
+<meta property="og:description" content="这篇博客的目的是记录与总结，从刚工作开始，一直到现在。持续更新ing。 我于2017年参加工作，很幸运的抓到了JQuery的尾巴。入职的公司比较小，同时技术leader没有指定技术栈，所以上来就开始用JQ开发一些小型项目，比如应用内内置的充值提现h5，宣传报名h5，电子医保卡等等。 当时对于项目的组织没有什么概念，这个状态我觉得可以称之为「负一层」。 记得比较清楚，当时是在做外包，给市民卡做电子医">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yxsgithub.github.io/hexo/2021/01/04/%E5%A6%82%E4%BD%95%E7%BB%84%E7%BB%87%E4%B8%80%E4%B8%AA%E9%A1%B9%E7%9B%AE%EF%BC%881%EF%BC%89/WX20210113-195802.png">
+<meta property="article:published_time" content="2021-01-04T11:14:24.000Z">
+<meta property="article:modified_time" content="2025-06-09T02:32:24.493Z">
+<meta property="article:author" content="yuxiao">
+<meta property="article:tag" content="代码人生">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yxsgithub.github.io/hexo/2021/01/04/%E5%A6%82%E4%BD%95%E7%BB%84%E7%BB%87%E4%B8%80%E4%B8%AA%E9%A1%B9%E7%9B%AE%EF%BC%881%EF%BC%89/WX20210113-195802.png">
+
+<link rel="canonical" href="https://yxsgithub.github.io/hexo/2021/01/04/%E5%A6%82%E4%BD%95%E7%BB%84%E7%BB%87%E4%B8%80%E4%B8%AA%E9%A1%B9%E7%9B%AE%EF%BC%881%EF%BC%89/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>如何组织一个项目（1） | Moonkin's Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/hexo/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Moonkin's Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">振翅</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/hexo/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/hexo/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yxsgithub.github.io/hexo/2021/01/04/%E5%A6%82%E4%BD%95%E7%BB%84%E7%BB%87%E4%B8%80%E4%B8%AA%E9%A1%B9%E7%9B%AE%EF%BC%881%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/hexo/images/avatar.gif">
+      <meta itemprop="name" content="yuxiao">
+      <meta itemprop="description" content="振翅">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Moonkin's Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          如何组织一个项目（1）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-01-04 19:14:24" itemprop="dateCreated datePublished" datetime="2021-01-04T19:14:24+08:00">2021-01-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-06-09 10:32:24" itemprop="dateModified" datetime="2025-06-09T10:32:24+08:00">2025-06-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>这篇博客的目的是记录与总结，从刚工作开始，一直到现在。持续更新ing。</p>
+<p>我于2017年参加工作，很幸运的抓到了JQuery的尾巴。入职的公司比较小，同时技术leader没有指定技术栈，所以上来就开始用JQ开发一些小型项目，比如应用内内置的充值提现h5，宣传报名h5，电子医保卡等等。</p>
+<p>当时对于项目的组织没有什么概念，这个状态我觉得可以称之为「负一层」。</p>
+<p>记得比较清楚，当时是在做外包，给市民卡做电子医保卡，支付宝的开发提供一套html页面，只有html和css</p>
+<p>没有js，功能我这边来实现，当时比较单纯，就直接在html页面里加script标签写js。现在想想，相当于所有的烂代码在页面上都可见（可怕.jpg）,我记得页面直接数据传递使用的还是localstorage，当时好像还有兼容ie7的需求，不知道这个bug有没有人发现。。。</p>
+<p>经历蛮荒时代之后，项目有了新的需求，需要实时和后端联调，需要动态加载一些资源，项目内容也逐渐增多，技术leader也要求对代码进行压缩处理，于是自己搭建的第一款开发环境出现了！</p>
+<p>需求点</p>
+<ol>
+<li>能够对html进行压缩处理，相应的js请求添加hash防止缓存</li>
+<li>对css进行处理，自动进行兼容处理</li>
+<li>对图片资源进行压缩，加速页面出现</li>
+<li>对js进行压缩，对于请求地址统一更改</li>
+<li>开发期间自行代理，处理跨域问题</li>
+</ol>
+<p>当时的时点webpack还没有一家独大，当时还有grunt，gulp存在。当时我的正好看到了gulp，gulp对我而言理解起来不难，所以就选择了gulp来进行项目的搭建。</p>
+<p>然后这里贴一个配置文件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> gulp = <span class="built_in">require</span>(<span class="string">&#x27;gulp&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> connect = <span class="built_in">require</span>(<span class="string">&#x27;gulp-connect&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> proxy = <span class="built_in">require</span>(<span class="string">&#x27;http-proxy-middleware&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> replace = <span class="built_in">require</span>(<span class="string">&#x27;gulp-replace&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> htmlmin = <span class="built_in">require</span>(<span class="string">&#x27;gulp-htmlmin&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> minicss = <span class="built_in">require</span>(<span class="string">&#x27;gulp-minify-css&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> gulpSequence = <span class="built_in">require</span>(<span class="string">&#x27;gulp-sequence&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> clean = <span class="built_in">require</span>(<span class="string">&#x27;gulp-clean&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> uglify = <span class="built_in">require</span>(<span class="string">&#x27;gulp-uglify&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> imagemin = <span class="built_in">require</span>(<span class="string">&#x27;gulp-imagemin&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> rev = <span class="built_in">require</span>(<span class="string">&#x27;gulp-rev-append&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> gulpConfig = <span class="built_in">require</span>(<span class="string">&quot;./gulp.config.js&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> autoprefixer = <span class="built_in">require</span>(<span class="string">&#x27;gulp-autoprefixer&#x27;</span>);</span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;help&#x27;</span>,<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;每次打包之后 dist文件夹下为测试或者生产版本&quot;</span>)</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;gulp run 打包项目-生产版本&quot;</span>);</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;gulp rundev 打包项目-测试版本&quot;</span>);</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;gulp server 开启代理&quot;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">/*=====================打包、修改地址==========================*/</span></span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;replace&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">	gulp.<span class="title function_">src</span>([<span class="string">&#x27;./dev/html/*&#x27;</span>])</span><br><span class="line">		.<span class="title function_">pipe</span>(<span class="title function_">replace</span>(gulpConfig.<span class="property">path</span>.<span class="property">local</span>, gulpConfig.<span class="property">path</span>.<span class="property">dist</span>))<span class="comment">//替换地址</span></span><br><span class="line">		.<span class="title function_">pipe</span>(<span class="title function_">replace</span>(<span class="string">&#x27;qwerrttyyuiiooo&#x27;</span>, gulpConfig.<span class="property">path</span>.<span class="property">buildNum</span>))</span><br><span class="line">		.<span class="title function_">pipe</span>(<span class="title function_">rev</span>())</span><br><span class="line">		.<span class="title function_">pipe</span>(<span class="title function_">htmlmin</span>(&#123;</span><br><span class="line">			<span class="attr">collapseWhitespace</span>: <span class="literal">true</span></span><br><span class="line">		&#125;))</span><br><span class="line">		.<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;dist/html&#x27;</span>));</span><br><span class="line">&#125;);</span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;replacedev&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">	gulp.<span class="title function_">src</span>([<span class="string">&#x27;./dev/html/*&#x27;</span>])</span><br><span class="line">		.<span class="title function_">pipe</span>(<span class="title function_">replace</span>(gulpConfig.<span class="property">path</span>.<span class="property">local</span>, gulpConfig.<span class="property">path</span>.<span class="property">dev</span>)) <span class="comment">//替换地址</span></span><br><span class="line">		.<span class="title function_">pipe</span>(<span class="title function_">replace</span>(<span class="string">&#x27;qwerrttyyuiiooo&#x27;</span>, gulpConfig.<span class="property">path</span>.<span class="property">buildNum</span>))</span><br><span class="line">		.<span class="title function_">pipe</span>(<span class="title function_">rev</span>())</span><br><span class="line">		.<span class="title function_">pipe</span>(<span class="title function_">htmlmin</span>(&#123;</span><br><span class="line">			<span class="attr">collapseWhitespace</span>: <span class="literal">true</span></span><br><span class="line">		&#125;))</span><br><span class="line">		.<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;dist/html&#x27;</span>));</span><br><span class="line">&#125;);</span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;remove&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">	gulp.<span class="title function_">src</span>([<span class="string">&#x27;./dev/css/*.css&#x27;</span>,<span class="string">&quot;!./dev/css/microdone-h5.min.css&quot;</span>])</span><br><span class="line">        .<span class="title function_">pipe</span>(<span class="title function_">autoprefixer</span>(&#123;</span><br><span class="line">            <span class="attr">browsers</span>: [<span class="string">&#x27;last 2 versions&#x27;</span>],</span><br><span class="line">            <span class="attr">cascade</span>: <span class="literal">false</span></span><br><span class="line">        &#125;))</span><br><span class="line">		.<span class="title function_">pipe</span>(<span class="title function_">minicss</span>())</span><br><span class="line">		.<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;dist/css&#x27;</span>))</span><br><span class="line">    gulp.<span class="title function_">src</span>(<span class="string">&quot;!./dev/css/microdone-h5.min.css&quot;</span>).<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;dist/css&#x27;</span>))</span><br><span class="line">&#125;);</span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&quot;clean&quot;</span>, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">	<span class="keyword">return</span> gulp.<span class="title function_">src</span>(<span class="string">&quot;./dist&quot;</span>)</span><br><span class="line">		.<span class="title function_">pipe</span>(<span class="title function_">clean</span>());</span><br><span class="line">&#125;);</span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;testImagemin&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">	gulp.<span class="title function_">src</span>(<span class="string">&#x27;./dev/img/*.&#123;png,jpg,gif,ico&#125;&#x27;</span>)</span><br><span class="line">		.<span class="title function_">pipe</span>(<span class="title function_">imagemin</span>())</span><br><span class="line">		.<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;dist/img&#x27;</span>));</span><br><span class="line">    gulp.<span class="title function_">src</span>(<span class="string">&#x27;./dev/img/svg/*&#x27;</span>)</span><br><span class="line">        .<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;dist/img/svg&#x27;</span>));</span><br><span class="line">&#125;);</span><br><span class="line"> gulp.<span class="title function_">task</span>(<span class="string">&#x27;js-min&#x27;</span>,<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">   gulp.<span class="title function_">src</span>(<span class="string">&#x27;./dev/js/*.js&#x27;</span>)</span><br><span class="line">       .<span class="title function_">pipe</span>(<span class="title function_">replace</span>(gulpConfig.<span class="property">path</span>.<span class="property">local</span>, gulpConfig.<span class="property">path</span>.<span class="property">dist</span>))<span class="comment">//替换地址</span></span><br><span class="line">       .<span class="title function_">pipe</span>(<span class="title function_">uglify</span>())       </span><br><span class="line">       .<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;dist/js&#x27;</span>));</span><br><span class="line"> &#125;);</span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;js-minDev&#x27;</span>,<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    gulp.<span class="title function_">src</span>(<span class="string">&#x27;./dev/js/*.js&#x27;</span>)</span><br><span class="line">        .<span class="title function_">pipe</span>(<span class="title function_">replace</span>(gulpConfig.<span class="property">path</span>.<span class="property">local</span>, gulpConfig.<span class="property">path</span>.<span class="property">dev</span>))<span class="comment">//替换地址</span></span><br><span class="line">        .<span class="title function_">pipe</span>(<span class="title function_">uglify</span>())</span><br><span class="line">        .<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;dist/js&#x27;</span>));</span><br><span class="line">&#125;);</span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;run&#x27;</span>, <span class="title function_">gulpSequence</span>(<span class="string">&#x27;clean&#x27;</span>, [<span class="string">&#x27;replace&#x27;</span>, <span class="string">&#x27;remove&#x27;</span>,<span class="string">&#x27;testImagemin&#x27;</span>,<span class="string">&#x27;js-min&#x27;</span>]));</span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;rundev&#x27;</span>, <span class="title function_">gulpSequence</span>(<span class="string">&#x27;clean&#x27;</span>, [<span class="string">&#x27;replacedev&#x27;</span>, <span class="string">&#x27;remove&#x27;</span>,<span class="string">&#x27;testImagemin&#x27;</span>,<span class="string">&#x27;js-minDev&#x27;</span>]));</span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;server&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">	connect.<span class="title function_">server</span>(&#123;</span><br><span class="line">		<span class="attr">root</span>: [<span class="string">&#x27;dev&#x27;</span>],</span><br><span class="line">		<span class="attr">port</span>: <span class="number">8000</span>,</span><br><span class="line">		<span class="attr">livereload</span>: <span class="literal">true</span>,</span><br><span class="line">		<span class="attr">middleware</span>: <span class="keyword">function</span>(<span class="params">connect, opt</span>) &#123;</span><br><span class="line">			<span class="keyword">return</span> [</span><br><span class="line">				<span class="title function_">proxy</span>(<span class="string">&#x27;/recharge&#x27;</span>, &#123;</span><br><span class="line">					<span class="attr">target</span>: <span class="string">&#x27;http://115.236.162.164:9001&#x27;</span>,</span><br><span class="line">					<span class="attr">changeOrigin</span>: <span class="literal">true</span></span><br><span class="line">				&#125;)</span><br><span class="line">			]</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>然后是项目目录</p>
+<img src="/hexo/2021/01/04/%E5%A6%82%E4%BD%95%E7%BB%84%E7%BB%87%E4%B8%80%E4%B8%AA%E9%A1%B9%E7%9B%AE%EF%BC%881%EF%BC%89/WX20210113-195802.png" class="">
+
+<p>项目部署的话是直接将打包后的文件夹扔到了服务器上，开发的路径实际上是和服务器上访问文件的路径是相同的，所以相当于最早的约定式路由吧。</p>
+<h3 id="使用gulp来组织项目"><a href="#使用gulp来组织项目" class="headerlink" title="使用gulp来组织项目"></a>使用gulp来组织项目</h3><p>gulp是使用task来对项目进行处理，每个task可以独立命名和组合使用，在task内部我选择指定一系列文件分别进行处理，当gulp读到了文件的时候使用管道（pipe）依次进行处理，每次进行完将结果向下传递和处理，而pipe拿到的入参如果没记错话应该是string类型的文件内容</p>
+<p>之后还有打包加速的优化，js，css，html的处理完全可以同时进行，所以引入了gulpSequence来进行多线程加速</p>
+<h3 id="JQuery编写项目"><a href="#JQuery编写项目" class="headerlink" title="JQuery编写项目"></a>JQuery编写项目</h3><p>这个时间点还没有框架，只有jq对于浏览器api进行了一次兼容处理，因为有了jq，这个时点不需要处理兼容问题。这块编写代码的话，我是在页面定义了一个pageInfo对象来对页面内的数据进行管理，看起来有点像react里的state。jq提供一个$(function(){}),相当于react里的componentDidMount，是页面加载完成执行的函数，相当于最原始的声明周期。当时对于项目的组织是基于事件的，页面的每一个状态并不靠数据改变来进行，而是依靠事件来驱动，某个事件被触发之后依据当时的数据对页面进行一次更新。</p>
+<p>这时，前端的开发模式是先写页面，然后用jq选择器对相应class的dom内容进行修改，这个方式组织起来的项目主要是小项目，内置h5页面，只有最简单的工程化内容，代码抽象程度很低。</p>
+<p>不过这段时间的经历对我后面转react开发很有帮助</p>
+<p>未完待续。。。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/hexo/tags/%E4%BB%A3%E7%A0%81%E4%BA%BA%E7%94%9F/" rel="tag"># 代码人生</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/hexo/2020/12/07/%E4%BD%BF%E7%94%A8monorepo%E6%9D%A5%E7%AE%A1%E7%90%86%E9%A1%B9%E7%9B%AE/" rel="prev" title="使用monorepo来管理项目">
+      <i class="fa fa-chevron-left"></i> 使用monorepo来管理项目
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/hexo/2021/01/07/%E5%A6%82%E4%BD%95%E7%BB%84%E7%BB%87%E4%B8%80%E4%B8%AA%E9%A1%B9%E7%9B%AE%EF%BC%882%EF%BC%89/" rel="next" title="如何组织一个项目（2）">
+      如何组织一个项目（2） <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8gulp%E6%9D%A5%E7%BB%84%E7%BB%87%E9%A1%B9%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">使用gulp来组织项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JQuery%E7%BC%96%E5%86%99%E9%A1%B9%E7%9B%AE"><span class="nav-number">2.</span> <span class="nav-text">JQuery编写项目</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">yuxiao</p>
+  <div class="site-description" itemprop="description">振翅</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/hexo/archives/">
+        
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/hexo/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yuxiao</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/hexo/lib/anime.min.js"></script>
+  <script src="/hexo/lib/velocity/velocity.min.js"></script>
+  <script src="/hexo/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/hexo/js/utils.js"></script>
+
+<script src="/hexo/js/motion.js"></script>
+
+
+<script src="/hexo/js/schemes/muse.js"></script>
+
+
+<script src="/hexo/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

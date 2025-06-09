@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/hexo/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/hexo/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/hexo/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/hexo/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/hexo/css/main.css">
+
+
+<link rel="stylesheet" href="/hexo/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yxsgithub.github.io","root":"/hexo/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="虚拟dom是什么virtul DOM 也就是虚拟节点。通过JS的Object对象模拟DOM中的真实节点对象，再通过特定的render方法将其渲染成真实的DOM节点。 生成vNode—-&gt;渲染成真实节点 ———&gt;挂载到页面———&gt;diff比较 也就是说虚拟dom是在内存中存在，并不在页面上 React中的dom操作1234567891011121314151617181920212">
+<meta property="og:type" content="article">
+<meta property="og:title" content="虚拟dom之操作">
+<meta property="og:url" content="https://yxsgithub.github.io/hexo/2021/05/24/%E8%99%9A%E6%8B%9Fdom%E4%B9%8B%E6%93%8D%E4%BD%9C/index.html">
+<meta property="og:site_name" content="Moonkin&#39;s Hexo">
+<meta property="og:description" content="虚拟dom是什么virtul DOM 也就是虚拟节点。通过JS的Object对象模拟DOM中的真实节点对象，再通过特定的render方法将其渲染成真实的DOM节点。 生成vNode—-&gt;渲染成真实节点 ———&gt;挂载到页面———&gt;diff比较 也就是说虚拟dom是在内存中存在，并不在页面上 React中的dom操作1234567891011121314151617181920212">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-05-24T11:04:49.000Z">
+<meta property="article:modified_time" content="2025-06-09T02:32:24.495Z">
+<meta property="article:author" content="yuxiao">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://yxsgithub.github.io/hexo/2021/05/24/%E8%99%9A%E6%8B%9Fdom%E4%B9%8B%E6%93%8D%E4%BD%9C/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>虚拟dom之操作 | Moonkin's Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/hexo/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Moonkin's Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">振翅</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/hexo/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/hexo/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yxsgithub.github.io/hexo/2021/05/24/%E8%99%9A%E6%8B%9Fdom%E4%B9%8B%E6%93%8D%E4%BD%9C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/hexo/images/avatar.gif">
+      <meta itemprop="name" content="yuxiao">
+      <meta itemprop="description" content="振翅">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Moonkin's Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          虚拟dom之操作
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-05-24 19:04:49" itemprop="dateCreated datePublished" datetime="2021-05-24T19:04:49+08:00">2021-05-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-06-09 10:32:24" itemprop="dateModified" datetime="2025-06-09T10:32:24+08:00">2025-06-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="虚拟dom是什么"><a href="#虚拟dom是什么" class="headerlink" title="虚拟dom是什么"></a>虚拟dom是什么</h3><p>virtul DOM 也就是虚拟节点。通过JS的Object对象模拟DOM中的真实节点对象，再通过特定的render方法将其渲染成真实的DOM节点。</p>
+<p>生成vNode—-&gt;渲染成真实节点 ———&gt;挂载到页面———&gt;diff比较</p>
+<p>也就是说虚拟dom是在内存中存在，并不在页面上</p>
+<h3 id="React中的dom操作"><a href="#React中的dom操作" class="headerlink" title="React中的dom操作"></a>React中的dom操作</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">export default class Input extends React.Component &#123;</span><br><span class="line">  constructor(props) &#123;</span><br><span class="line">      super(props);</span><br><span class="line">      this.state = &#123;</span><br><span class="line">          count:1</span><br><span class="line">      &#125;</span><br><span class="line">    this.myRef = React.createRef();</span><br><span class="line">  &#125;</span><br><span class="line">  componentDidUpdate() &#123;</span><br><span class="line">    console.log(&quot;componentDidUpdate&quot;,this.myRef);</span><br><span class="line">  &#125;</span><br><span class="line">  render() &#123;</span><br><span class="line">    console.log(this.myRef);</span><br><span class="line">    return (</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &lt;div</span><br><span class="line">          ref=&#123;this.myRef&#125;</span><br><span class="line">          onClick=&#123;() =&gt; &#123;</span><br><span class="line">              console.log(this.myRef);</span><br><span class="line">              this.setState(state =&gt; &#123;</span><br><span class="line">                  state.count += 1;</span><br><span class="line">                  return state</span><br><span class="line">              &#125;)</span><br><span class="line">          &#125;&#125;</span><br><span class="line">        &gt;</span><br><span class="line">          111111</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通常情况下我们用ref拿到reactNode，还可以使用document.getElement系列方法这里不展开。</p>
+<p>通常ref是当节点渲染完成之后才能拿到的，也就是说，节点已经渲染到了页面上，这个时候再去操作dom就有些晚了，会造成页面的闪动</p>
+<h3 id="hooks时代，这个问题有了新的解决方案"><a href="#hooks时代，这个问题有了新的解决方案" class="headerlink" title="hooks时代，这个问题有了新的解决方案"></a>hooks时代，这个问题有了新的解决方案</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">export default  function Index () &#123;</span><br><span class="line">    const ref = useRef();</span><br><span class="line">    </span><br><span class="line">    useEffect(() =&gt; &#123;</span><br><span class="line">        console.log(&quot;useEffect&quot;,ref)</span><br><span class="line">        ref.current.style.transform = &quot;translateY(300px)&quot;</span><br><span class="line">    &#125;, []);</span><br><span class="line">    return (</span><br><span class="line">        &lt;div className=&#x27;animate&#x27;&gt;</span><br><span class="line">            &lt;div ref=&#123;ref&#125; className=&quot;square&quot; onClick=&#123;() =&gt; &#123;</span><br><span class="line">                 console.log(&quot;onClick&quot;,ref)</span><br><span class="line">                 ref.current.style.transform = &quot;translateY(0px)&quot;</span><br><span class="line">            &#125;&#125;&gt;square&lt;/div&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在hooks组件中执行有副作用的操作可以用useEffect来包裹，但是这样还是会有闪动的问题</p>
+<p>但是在一次查看rc-overflow的源码时发现了一种新写法 useLayoutEffect</p>
+<h3 id="useEffect和useLayoutEffect区别"><a href="#useEffect和useLayoutEffect区别" class="headerlink" title="useEffect和useLayoutEffect区别"></a>useEffect和useLayoutEffect区别</h3><p>摘抄了一点网上的说明：</p>
+<h4 id="useEffect"><a href="#useEffect" class="headerlink" title="useEffect"></a>useEffect</h4><p>基本上90%的情况下,都应该用这个,这个是在render结束后,你的callback函数执行,但是不会block browser painting,算是某种异步的方式吧,但是class的componentDidMount 和componentDidUpdate是同步的,在render结束后就运行,useEffect在大部分场景下都比class的方式性能更好.</p>
+<h4 id="useLayoutEffect"><a href="#useLayoutEffect" class="headerlink" title="useLayoutEffect"></a>useLayoutEffect</h4><p>这个是用在处理DOM的时候,当你的useEffect里面的操作需要处理DOM,并且会改变页面的样式,就需要用这个,否则可能会出现出现闪屏问题, useLayoutEffect里面的callback函数会在DOM更新完成后立即执行,但是会在浏览器进行任何绘制之前运行完成,阻塞了浏览器的绘制.</p>
+<p>也就是说useLayoutEffect会在虚拟dom在渲染成真实dom之前同步调用</p>
+<p>这个方法可以相当于对虚拟dom进行操作</p>
+<p>利用这个我们可以解决很多问题</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">export default  function Index () &#123;</span><br><span class="line">    const ref = useRef();</span><br><span class="line">    </span><br><span class="line">    useLayoutEffect(() =&gt; &#123;</span><br><span class="line">        console.log(&quot;useEffect&quot;,ref)</span><br><span class="line">        ref.current.style.transform = &quot;translateY(300px)&quot;</span><br><span class="line">    &#125;, []);</span><br><span class="line">    return (</span><br><span class="line">        &lt;div className=&#x27;animate&#x27;&gt;</span><br><span class="line">            &lt;div ref=&#123;ref&#125; className=&quot;square&quot; onClick=&#123;() =&gt; &#123;</span><br><span class="line">                 console.log(&quot;onClick&quot;,ref)</span><br><span class="line">                 ref.current.style.transform = &quot;translateY(0px)&quot;</span><br><span class="line">            &#125;&#125;&gt;square&lt;/div&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这次的实现，就是文字直接出现到了目标位置</p>
+<p>但是代价就是白屏稍微长了一些</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在react16.8之后提供了react-hooks</p>
+<p>其中的useLayoutEffect可以帮助我们同步的对dom进行一些操作</p>
+<p>这能帮助我们可以以部分性能为代价实现某些dom计算操作</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/hexo/2021/04/25/%E5%85%B3%E4%BA%8Etransform%E5%B8%A6%E6%9D%A5%E7%9A%84%E2%80%A6%E2%80%A6/" rel="prev" title="关于transform带来的……">
+      <i class="fa fa-chevron-left"></i> 关于transform带来的……
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/hexo/2021/06/28/%E5%85%B3%E4%BA%8E%E7%BB%84%E4%BB%B6%E8%AE%BE%E8%AE%A1%E4%B8%AD%E7%9A%84TS%E8%87%AA%E5%8A%A8%E6%8E%A8%E5%AF%BC/" rel="next" title="关于组件设计中的TS自动推导">
+      关于组件设计中的TS自动推导 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E6%8B%9Fdom%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.</span> <span class="nav-text">虚拟dom是什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#React%E4%B8%AD%E7%9A%84dom%E6%93%8D%E4%BD%9C"><span class="nav-number">2.</span> <span class="nav-text">React中的dom操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hooks%E6%97%B6%E4%BB%A3%EF%BC%8C%E8%BF%99%E4%B8%AA%E9%97%AE%E9%A2%98%E6%9C%89%E4%BA%86%E6%96%B0%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">3.</span> <span class="nav-text">hooks时代，这个问题有了新的解决方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#useEffect%E5%92%8CuseLayoutEffect%E5%8C%BA%E5%88%AB"><span class="nav-number">4.</span> <span class="nav-text">useEffect和useLayoutEffect区别</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#useEffect"><span class="nav-number">4.1.</span> <span class="nav-text">useEffect</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#useLayoutEffect"><span class="nav-number">4.2.</span> <span class="nav-text">useLayoutEffect</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">yuxiao</p>
+  <div class="site-description" itemprop="description">振翅</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/hexo/archives/">
+        
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/hexo/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yuxiao</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/hexo/lib/anime.min.js"></script>
+  <script src="/hexo/lib/velocity/velocity.min.js"></script>
+  <script src="/hexo/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/hexo/js/utils.js"></script>
+
+<script src="/hexo/js/motion.js"></script>
+
+
+<script src="/hexo/js/schemes/muse.js"></script>
+
+
+<script src="/hexo/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

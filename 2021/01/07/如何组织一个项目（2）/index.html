@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/hexo/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/hexo/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/hexo/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/hexo/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/hexo/css/main.css">
+
+
+<link rel="stylesheet" href="/hexo/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yxsgithub.github.io","root":"/hexo/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="到了2017年下半年，我已经利用上文的模板写了七八个小项目吧，这个时候我们团队接到了一个任务，就是之前外包的生活缴费项目变成合作模式，完全交给我们来做，甲方自己只做商务运营和对接。 这个时候就面临着一些问题，用户面的扩大希望解决更多的兼容性问题，直接在代码里写死的模式已经不适合这种每周对接一个新产品的模式，效率过低且由于供应商并不多，可以通用化，额外加上的对账，动态开关产品的需求，于是我们大胆的决">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何组织一个项目（2）">
+<meta property="og:url" content="https://yxsgithub.github.io/hexo/2021/01/07/%E5%A6%82%E4%BD%95%E7%BB%84%E7%BB%87%E4%B8%80%E4%B8%AA%E9%A1%B9%E7%9B%AE%EF%BC%882%EF%BC%89/index.html">
+<meta property="og:site_name" content="Moonkin&#39;s Hexo">
+<meta property="og:description" content="到了2017年下半年，我已经利用上文的模板写了七八个小项目吧，这个时候我们团队接到了一个任务，就是之前外包的生活缴费项目变成合作模式，完全交给我们来做，甲方自己只做商务运营和对接。 这个时候就面临着一些问题，用户面的扩大希望解决更多的兼容性问题，直接在代码里写死的模式已经不适合这种每周对接一个新产品的模式，效率过低且由于供应商并不多，可以通用化，额外加上的对账，动态开关产品的需求，于是我们大胆的决">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yxsgithub.github.io/hexo/2021/01/07/%E5%A6%82%E4%BD%95%E7%BB%84%E7%BB%87%E4%B8%80%E4%B8%AA%E9%A1%B9%E7%9B%AE%EF%BC%882%EF%BC%89/WX20210113-195929.png">
+<meta property="article:published_time" content="2021-01-07T11:54:24.000Z">
+<meta property="article:modified_time" content="2025-06-09T02:32:24.493Z">
+<meta property="article:author" content="yuxiao">
+<meta property="article:tag" content="代码人生">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yxsgithub.github.io/hexo/2021/01/07/%E5%A6%82%E4%BD%95%E7%BB%84%E7%BB%87%E4%B8%80%E4%B8%AA%E9%A1%B9%E7%9B%AE%EF%BC%882%EF%BC%89/WX20210113-195929.png">
+
+<link rel="canonical" href="https://yxsgithub.github.io/hexo/2021/01/07/%E5%A6%82%E4%BD%95%E7%BB%84%E7%BB%87%E4%B8%80%E4%B8%AA%E9%A1%B9%E7%9B%AE%EF%BC%882%EF%BC%89/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>如何组织一个项目（2） | Moonkin's Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/hexo/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Moonkin's Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">振翅</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/hexo/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/hexo/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yxsgithub.github.io/hexo/2021/01/07/%E5%A6%82%E4%BD%95%E7%BB%84%E7%BB%87%E4%B8%80%E4%B8%AA%E9%A1%B9%E7%9B%AE%EF%BC%882%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/hexo/images/avatar.gif">
+      <meta itemprop="name" content="yuxiao">
+      <meta itemprop="description" content="振翅">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Moonkin's Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          如何组织一个项目（2）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-01-07 19:54:24" itemprop="dateCreated datePublished" datetime="2021-01-07T19:54:24+08:00">2021-01-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-06-09 10:32:24" itemprop="dateModified" datetime="2025-06-09T10:32:24+08:00">2025-06-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>到了2017年下半年，我已经利用上文的模板写了七八个小项目吧，这个时候我们团队接到了一个任务，就是之前外包的生活缴费项目变成合作模式，完全交给我们来做，甲方自己只做商务运营和对接。</p>
+<p>这个时候就面临着一些问题，用户面的扩大希望解决更多的兼容性问题，直接在代码里写死的模式已经不适合这种每周对接一个新产品的模式，效率过低且由于供应商并不多，可以通用化，额外加上的对账，动态开关产品的需求，于是我们大胆的决定更换技术栈。经过技术调研，采用了facebook的react，jsx和all in js的模式吸引了我们，虚拟dom的理念让我们眼前一亮，第一次对组件化方案有了理解</p>
+<p>这个时间我们对于项目的要求是，能跑起来就行，于是参考各类博客自己搭建一个使用的项目模板</p>
+<ol>
+<li>使用webpack进行打包</li>
+<li>使用webpack-dev-server实现开发环境的热更新和代理</li>
+<li>使用babel进行es6转es5，使用pollify对ie进行兼容</li>
+<li>使用react react-dom react-router进行这个项目的渲染以及路由拆分</li>
+</ol>
+<p>然后是项目目录</p>
+<img src="/hexo/2021/01/07/%E5%A6%82%E4%BD%95%E7%BB%84%E7%BB%87%E4%B8%80%E4%B8%AA%E9%A1%B9%E7%9B%AE%EF%BC%882%EF%BC%89/WX20210113-195929.png" class="">
+
+<p>这个时候以及不局限与技术上的要求，会考虑业务上的需求，所以项目拆分成两个 一个移动端h5，一个后台管理系统，分别独立部署，确保互相不干扰，就这样对于如何组织一个项目有了自己的一点点想法</p>
+<p>首先是满足业务的需求，技术是为了减少开发维护成本，方便开发而选择。针对业务需求的不同，适当的拆分会让整个项目的逻辑变得更加的简单，减少心智负担。</p>
+<p>这个时候同时开发一个项目的同事不多，整个项目模板突出一个粗糙，不可扩展，没有健壮性。一切的目的都是为了快速交付，这个时候坚信在产品逻辑上想到前面比代码写得好要重要很多。这个时候我觉得大概可以称之为第二层。</p>
+<p>当我接到一个项目，首先进行的是模块的划分，组件进行划分。这个地方功能区域要做成组件，动态增添icon区域可配置，这几个页面因为相似可以放在一起，另一个功能比较特殊，单独找一个页面进行存放</p>
+<p>技术方面的，选择了react之后开始拥抱es6，非常有成就感的一段经历，每天都能学到新东西，箭头函数，react中的this指向，class component，生命周期，component diff，key ，模块化等等等</p>
+<p>后面我用上了antd，第一次使用react的ui库就用了这个，很多写法是跟着人家的代码示例来，一边写一边学，这个时候也是cv大法好，很少自己去封装组件，相同的功能进行拷贝，能用人家的组件就用人家的组件。</p>
+<p>就这样大概以一个月一到两个项目的速度一直维持到2018年3月</p>
+<p>未完待续</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/hexo/tags/%E4%BB%A3%E7%A0%81%E4%BA%BA%E7%94%9F/" rel="tag"># 代码人生</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/hexo/2021/01/04/%E5%A6%82%E4%BD%95%E7%BB%84%E7%BB%87%E4%B8%80%E4%B8%AA%E9%A1%B9%E7%9B%AE%EF%BC%881%EF%BC%89/" rel="prev" title="如何组织一个项目（1）">
+      <i class="fa fa-chevron-left"></i> 如何组织一个项目（1）
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/hexo/2021/01/13/%E5%A6%82%E4%BD%95%E7%BB%84%E7%BB%87%E4%B8%80%E4%B8%AA%E9%A1%B9%E7%9B%AE%EF%BC%883%EF%BC%89/" rel="next" title="如何组织一个项目（3）">
+      如何组织一个项目（3） <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">yuxiao</p>
+  <div class="site-description" itemprop="description">振翅</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/hexo/archives/">
+        
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/hexo/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yuxiao</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/hexo/lib/anime.min.js"></script>
+  <script src="/hexo/lib/velocity/velocity.min.js"></script>
+  <script src="/hexo/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/hexo/js/utils.js"></script>
+
+<script src="/hexo/js/motion.js"></script>
+
+
+<script src="/hexo/js/schemes/muse.js"></script>
+
+
+<script src="/hexo/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
