@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "hexo generate",
-    "clean": "hexo clean",
-    "deploy": "hexo deploy",
+    "build": "npx hexo generate",
+    "clean": "npx hexo clean",
+    "deploy": "npx hexo deploy",
     "server": "npx hexo server",
     "new": "node ./newPost.js"
   },
