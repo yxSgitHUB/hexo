@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 5.4.2">
+<meta name="generator" content="Hexo 7.3.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/hexo/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/hexo/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/hexo/images/favicon-16x16-next.png">
@@ -211,7 +211,7 @@
 <p>绑定事件的方法</p>
 <figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">btn.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>,<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;btn&#x27;</span>)</span><br><span class="line">&#125;,<span class="literal">true</span>)</span><br><span class="line">box.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>,<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;box&#x27;</span>)</span><br><span class="line">&#125;,<span class="literal">false</span>)</span><br></pre></td></tr></table></figure>
 
-<p>addEventListener有三个参数 事件名称、事件回调、捕获/冒泡</p>
+<p>addEventListener有三个参数 事件名称、事件回调、捕获&#x2F;冒泡</p>
 <h3 id="React事件模型（16-8-0）"><a href="#React事件模型（16-8-0）" class="headerlink" title="React事件模型（16.8.0）"></a>React事件模型（16.8.0）</h3><p>React会将所有的事件都绑定在最外层(document)，使用统一的事件监听，并在冒泡阶段处理事件，当挂载或者卸载组件时，只需要在通过的在统一的事件监听位置增加或者删除对象，因此可以提高效率。并且React并没有使用原生的浏览器事件，而是在基于Virtual DOM的基础上实现了合成事件(SyntheticEvent)，事件处理程序接收到的是SyntheticEvent的实例。SyntheticEvent完全符合W3C的标准，因此在事件层次上具有浏览器兼容性，与原生的浏览器事件一样拥有同样的接口，可以通过stopPropagation()和preventDefault()相应的中断。如果需要访问当原生的事件对象，可以通过引用nativeEvent获得。</p>
 <p>由于React内部维护了一个自己的事件池，所以在事件的行为看起来与原始事件模型蕾丝，React在内部维护了合成事件，抹平了事件之间的差异，因此也带来了一些坑点。</p>
 <p>由于React只设计了冒泡模式，所有的事件都统一实现了冒泡的效果，所以当react事件与原生事件混用会有些问题</p>
@@ -319,7 +319,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/hexo/archives/">
         
-          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-count">16</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

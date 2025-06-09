@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 5.4.2">
+<meta name="generator" content="Hexo 7.3.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/hexo/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/hexo/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/hexo/images/favicon-16x16-next.png">
@@ -217,13 +217,13 @@
 <p>也可以获取到组件内的属性，对组件的属性进行分析</p>
 <p>列举一个场景</p>
 <p>在开发sugar的pagination的时候，当选中的元素不同时要渲染出不一样的页码，这个时候就可以通过这种方式来进行测试来保证各种场景的正确性，其中还有选中元素偏离等小逻辑，可以防止后边的同学开发写错</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>前端自动化测试整体大致分为以下四类：单元测试、集成测试、ui测试、端到端(e2e)测试/功能测试，虽各有场景，但也在“不同阶段“各有优劣。这里必须强调是“不同阶段”，才会产生不同的选择优劣，因为每一种自动化测试本身，都有其实际不可替代的场景。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>前端自动化测试整体大致分为以下四类：单元测试、集成测试、ui测试、端到端(e2e)测试&#x2F;功能测试，虽各有场景，但也在“不同阶段“各有优劣。这里必须强调是“不同阶段”，才会产生不同的选择优劣，因为每一种自动化测试本身，都有其实际不可替代的场景。</p>
 <p><strong>1、单元测试</strong><br>单元测试：是指对应用中的最小可测试单元进行检查和验证，通常指的是独立测试单个函数。<br>举一个场景：你现在要改造一个老前端框架，并根据其开发一个向后兼容的新框架。此时老框架针对其内部API函数，写了充分的单测用例。那么，在开发新框架时，直接运行老前端框架的单测用例，偌所有测试用例都通过(PASS)，则可快速保证内部API函数的一致性，快速验证了所有功能场景。</p>
 <p>前端单元测试，是所有类型的前端自动化测试中成本较低，且90%以上前端逻辑场景都可覆盖的，非常有效的自动化测试手段。</p>
 <p><strong>2、集成测试</strong><br>集成测试：就是测试应用中完全不同的模块(组件)间，如何集成、如何一起工作。这和它的名字一致，用来确保不同组件间互相合作的正确性。</p>
 <p>举一个场景：测试在接收到特定的 post 请求以后，数据库会添加对应的记录，那么这就是集成测试，而不是单元测试。 远端发起post请求的服务 和 数据库，就是完全不同的模块。</p>
 <p><strong>3、UI 测试</strong><br>UI 测试：是对图形交互界面的测试。UI层是用户使用产品的入口，所有功能通过这一层提供给用户。<br>举一个例子：现在你要对比，“特定页面的视觉样式”是否严格满足“设计师产出的视觉稿”，就涉及到了ui测试。一般会涉及到UI界面的快照(界面截图)对比等。</p>
-<p><strong>4、端到端(e2e)测试</strong><br>端到端(e2e)测试/功能测试：是站在用户角度的测试，把我们的程序看成是一个黑盒子，用来确保整个应用会按照用户期望的那样运行。</p>
+<p><strong>4、端到端(e2e)测试</strong><br>端到端(e2e)测试&#x2F;功能测试：是站在用户角度的测试，把我们的程序看成是一个黑盒子，用来确保整个应用会按照用户期望的那样运行。</p>
 <p>不关心代码内部的实现，只负责打开浏览器，把测试用例中设置的内容在页面上输入一遍，看是不是得到想要得到的结果。</p>
 <p><strong>适当把单元测试，集成测试、UI测试和e2e测试，按照发布上线前的不同阶段进行互相隔离后，可以在开发的不同阶段分别运行它们，进而全面的保障应用的稳定性。</strong></p>
 
@@ -320,7 +320,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/hexo/archives/">
         
-          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-count">16</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 5.4.2">
+<meta name="generator" content="Hexo 7.3.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/hexo/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/hexo/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/hexo/images/favicon-16x16-next.png">
@@ -148,6 +148,79 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yxsgithub.github.io/hexo/2025/06/09/TypeScript%E5%B0%8F%E8%AF%BE%E5%A0%82%EF%BC%882%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/hexo/images/avatar.gif">
+      <meta itemprop="name" content="yuxiao">
+      <meta itemprop="description" content="振翅">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Moonkin's Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/hexo/2025/06/09/TypeScript%E5%B0%8F%E8%AF%BE%E5%A0%82%EF%BC%882%EF%BC%89/" class="post-title-link" itemprop="url">TypeScript小课堂（2）</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-06-09 14:31:30 / 修改时间：14:54:11" itemprop="dateCreated datePublished" datetime="2025-06-09T14:31:30+08:00">2025-06-09</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="复杂场景下-TS-的使用"><a href="#复杂场景下-TS-的使用" class="headerlink" title="复杂场景下 TS 的使用"></a>复杂场景下 TS 的使用</h3><p>上一篇我们讲了 TS 的基础使用，这一篇我们来看看在复杂场景下的使用。</p>
+<h4 id="1-复杂场景下的使用"><a href="#1-复杂场景下的使用" class="headerlink" title="1. 复杂场景下的使用"></a>1. 复杂场景下的使用</h4><p>复杂场景，这里一般指需要做数据清洗，构造，或者是封装通用组件的场景。</p>
+<h5 id="1-1-数据清洗"><a href="#1-1-数据清洗" class="headerlink" title="1.1 数据清洗"></a>1.1 数据清洗</h5><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">TreeItem</span> = &#123;</span><br><span class="line">  <span class="attr">title</span>: <span class="built_in">string</span>;</span><br><span class="line">  <span class="attr">key</span>: <span class="built_in">string</span>;</span><br><span class="line">  <span class="attr">parent</span>: <span class="built_in">string</span> | <span class="literal">null</span>;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> <span class="attr">data</span>: <span class="title class_">TreeItem</span>[] = [</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">title</span>: <span class="string">&quot;Trunk 0&quot;</span>,</span><br><span class="line">    <span class="attr">key</span>: <span class="string">&quot;0&quot;</span>,</span><br><span class="line">    <span class="attr">parent</span>: <span class="literal">null</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">title</span>: <span class="string">&quot;Trunk 1&quot;</span>,</span><br><span class="line">    <span class="attr">key</span>: <span class="string">&quot;1&quot;</span>,</span><br><span class="line">    <span class="attr">parent</span>: <span class="string">&quot;0&quot;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">title</span>: <span class="string">&quot;Trunk 2&quot;</span>,</span><br><span class="line">    <span class="attr">key</span>: <span class="string">&quot;2&quot;</span>,</span><br><span class="line">    <span class="attr">parent</span>: <span class="string">&quot;1&quot;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">];</span><br><span class="line"><span class="keyword">type</span> <span class="title class_">TreeData</span>&lt;T&gt; = &#123;</span><br><span class="line">  <span class="attr">title</span>: <span class="built_in">string</span>;</span><br><span class="line">  <span class="attr">key</span>: <span class="built_in">string</span>;</span><br><span class="line">  <span class="attr">children</span>?: <span class="title class_">TreeData</span>&lt;T&gt;[];</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> convertListToTree = (</span><br><span class="line">  <span class="attr">list</span>: <span class="title class_">TreeItem</span>[],</span><br><span class="line">  <span class="attr">parentKey</span>: <span class="built_in">string</span> | <span class="literal">null</span> = <span class="literal">null</span>,</span><br><span class="line">): <span class="title class_">TreeData</span>&lt;<span class="title class_">TreeItem</span>&gt;[] =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> <span class="attr">tree</span>: <span class="title class_">TreeData</span>&lt;<span class="title class_">TreeItem</span>&gt;[] = list</span><br><span class="line">    .<span class="title function_">filter</span>(<span class="function">(<span class="params">item</span>) =&gt;</span> item.<span class="property">parent</span> === parentKey)</span><br><span class="line">    .<span class="title function_">map</span>(<span class="function">(<span class="params">item</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">title</span>: item.<span class="property">title</span>,</span><br><span class="line">        <span class="attr">key</span>: item.<span class="property">key</span>,</span><br><span class="line">        <span class="attr">children</span>: <span class="title function_">convertListToTree</span>(list, item.<span class="property">key</span>),</span><br><span class="line">      &#125;;</span><br><span class="line">    &#125;);</span><br><span class="line">  <span class="keyword">return</span> tree;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="title function_">convertListToTree</span>(data);</span><br></pre></td></tr></table></figure>
+
+<h5 id="1-2-组件封装"><a href="#1-2-组件封装" class="headerlink" title="1.2 组件封装"></a>1.2 组件封装</h5><p>例如：设计一个 Select 组件，options 接受各种类型的 value，@change 的时候要返回准确的 value 类型。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;select @change=&quot;handleChange&quot; :value=&quot;value&quot;&gt;</span><br><span class="line">    &lt;option v-for=&quot;item in options&quot; :key=&quot;item.value&quot; :value=&quot;item.value&quot;&gt;</span><br><span class="line">      &#123;&#123; item.label &#125;&#125;</span><br><span class="line">    &lt;/option&gt;</span><br><span class="line">  &lt;/select&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line">&lt;script</span><br><span class="line">  setup</span><br><span class="line">  lang=&quot;ts&quot;</span><br><span class="line">  generic=&quot;</span><br><span class="line">  Value extends string | number ,</span><br><span class="line">  Option extends &#123; label: string; value: Value &#125;,</span><br><span class="line">&quot;</span><br><span class="line">&gt;</span><br><span class="line">const &#123; options, value &#125; = defineProps&lt;&#123;</span><br><span class="line">  options: Option[];</span><br><span class="line">  value: Value;</span><br><span class="line">&#125;&gt;();</span><br><span class="line">const emit = defineEmits&lt;&#123;</span><br><span class="line">  (e: &quot;change&quot;, value: Value): void;</span><br><span class="line">&#125;&gt;();</span><br><span class="line">const handleChange = (e: Event) =&gt; &#123;</span><br><span class="line">  const target = e.target as HTMLSelectElement;</span><br><span class="line">  const newValue = target.value as Value;</span><br><span class="line">  emit(&quot;change&quot;, newValue);</span><br><span class="line">&#125;;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>关于为什么要这么设计</p>
+<ol>
+<li>避免了类型转换的问题</li>
+<li>避免了类型不匹配的问题</li>
+<li>避免了类型推导的问题</li>
+<li>避免了类型检查的问题<br>举例</li>
+</ol>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> option1 = [</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">label</span>: <span class="string">&quot;Option 1&quot;</span>,</span><br><span class="line">    <span class="attr">value</span>: <span class="number">1</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">label</span>: <span class="string">&quot;Option 2&quot;</span>,</span><br><span class="line">    <span class="attr">value</span>: <span class="number">2</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">] <span class="keyword">as</span> <span class="keyword">const</span></span><br><span class="line"><span class="keyword">const</span> option2 = [</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">label</span>: <span class="string">&quot;Option 1&quot;</span>,</span><br><span class="line">    <span class="attr">value</span>: <span class="string">&quot;Option 1&quot;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">label</span>: <span class="string">&quot;Option 2&quot;</span>,</span><br><span class="line">    <span class="attr">value</span>: <span class="string">&quot;Option 2&quot;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">] <span class="keyword">as</span> <span class="keyword">const</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://yxsgithub.github.io/hexo/2025/06/09/TypeScript%E5%B0%8F%E8%AF%BE%E5%A0%82%EF%BC%881%EF%BC%89/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -284,7 +357,7 @@
 <img src="/hexo/2021/10/28/cypress/WX20211028-111230.png" class="">
 
 <p>选择对应的脚本，就会自动打开浏览器进行测试</p>
-<h2 id="cypress控件指北"><a href="#cypress控件指北" class="headerlink" title="cypress控件指北"></a>cypress控件指北</h2><p>在”/cypress/support/index.js“中，我们可以声明一些自定义的命令以及第三方封装好的命令</p>
+<h2 id="cypress控件指北"><a href="#cypress控件指北" class="headerlink" title="cypress控件指北"></a>cypress控件指北</h2><p>在”&#x2F;cypress&#x2F;support&#x2F;index.js“中，我们可以声明一些自定义的命令以及第三方封装好的命令</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&quot;./commands&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;cypress-xpath&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;cypress-wait-until&quot;</span>;</span><br></pre></td></tr></table></figure>
 
 <p>其中自定义命令为</p>
@@ -471,7 +544,7 @@
 <p>META元素通常用于指定网页的描述，关键词，文件的最后修改时间，作者及其他元数据。</p>
 <p>元数据可以被使用浏览器（如何显示内容或重新加载页面），搜索引擎（关键词），或其他 Web 服务调用。</p>
 <h2 id="1-http-equiv-属性"><a href="#1-http-equiv-属性" class="headerlink" title="1. http-equiv 属性"></a>1. http-equiv 属性</h2><p><code>http-equiv</code>一般设置的都是与<code>http</code>请求头相关的信息，设置的值会关联到http头部。也就是说浏览器在请求服务器获取<code>html</code>的时候，服务器会将<code>html</code>中设置的<code>meta</code>放在响应头中返回给浏览器。常见的类型比如<code>content-type</code>, <code>expires</code>, <code>refresh</code>, <code>set-cookie</code>, <code>window-target</code>, <code>charset</code>， <code>pragma</code>等等。</p>
-<h4 id="1-content-type"><a href="#1-content-type" class="headerlink" title="1. content-type"></a>1. content-type</h4><p>这样设置浏览器的头信息就会包含:content-type: text/html charset=utf8</p>
+<h4 id="1-content-type"><a href="#1-content-type" class="headerlink" title="1. content-type"></a>1. content-type</h4><p>这样设置浏览器的头信息就会包含:content-type: text&#x2F;html charset&#x3D;utf8</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;content-type&quot;</span> <span class="attr">content</span>=<span class="string">&quot;text/html charset=utf8&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <h4 id="2-expires"><a href="#2-expires" class="headerlink" title="2. expires"></a>2. expires</h4><p>用于设置浏览器的过期时间, 其实就是响应头中的expires属性。</p>
@@ -519,7 +592,7 @@
 </thead>
 <tbody><tr>
 <td>width</td>
-<td>设置**<em>layout viewport**</em> 的宽度，为一个正整数，或字符串”width-device”</td>
+<td>设置<em><strong>layout viewport</strong></em> 的宽度，为一个正整数，或字符串”width-device”</td>
 </tr>
 <tr>
 <td>initial-scale</td>
@@ -535,7 +608,7 @@
 </tr>
 <tr>
 <td>height</td>
-<td>设置**<em>layout viewport**</em> 的高度，这个属性对我们并不重要，很少使用</td>
+<td>设置<em><strong>layout viewport</strong></em> 的高度，这个属性对我们并不重要，很少使用</td>
 </tr>
 <tr>
 <td>user-scalable</td>
@@ -802,7 +875,7 @@
 <li>浏览器绘制这些元素的样式，颜色，背景，大小及边框等，这一步也叫做repaint。</li>
 <li>然后浏览器会将各层的信息发送给GPU，GPU会将各层合成；显示在屏幕上。</li>
 </ul>
-<p>reflow =&gt; repaint =&gt; composite</p>
+<p>reflow &#x3D;&gt; repaint &#x3D;&gt; composite</p>
 <p>浏览器渲染页面的任务由两个线程完成：主线程 和 排版线程</p>
 <p>渲染过程：<br> 不同属性值引起的重新绘制有3种路径：</p>
 <ol>
@@ -894,7 +967,7 @@
 <p>绑定事件的方法</p>
 <figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">btn.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>,<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;btn&#x27;</span>)</span><br><span class="line">&#125;,<span class="literal">true</span>)</span><br><span class="line">box.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>,<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;box&#x27;</span>)</span><br><span class="line">&#125;,<span class="literal">false</span>)</span><br></pre></td></tr></table></figure>
 
-<p>addEventListener有三个参数 事件名称、事件回调、捕获/冒泡</p>
+<p>addEventListener有三个参数 事件名称、事件回调、捕获&#x2F;冒泡</p>
 <h3 id="React事件模型（16-8-0）"><a href="#React事件模型（16-8-0）" class="headerlink" title="React事件模型（16.8.0）"></a>React事件模型（16.8.0）</h3><p>React会将所有的事件都绑定在最外层(document)，使用统一的事件监听，并在冒泡阶段处理事件，当挂载或者卸载组件时，只需要在通过的在统一的事件监听位置增加或者删除对象，因此可以提高效率。并且React并没有使用原生的浏览器事件，而是在基于Virtual DOM的基础上实现了合成事件(SyntheticEvent)，事件处理程序接收到的是SyntheticEvent的实例。SyntheticEvent完全符合W3C的标准，因此在事件层次上具有浏览器兼容性，与原生的浏览器事件一样拥有同样的接口，可以通过stopPropagation()和preventDefault()相应的中断。如果需要访问当原生的事件对象，可以通过引用nativeEvent获得。</p>
 <p>由于React内部维护了一个自己的事件池，所以在事件的行为看起来与原始事件模型蕾丝，React在内部维护了合成事件，抹平了事件之间的差异，因此也带来了一些坑点。</p>
 <p>由于React只设计了冒泡模式，所有的事件都统一实现了冒泡的效果，所以当react事件与原生事件混用会有些问题</p>
@@ -991,130 +1064,15 @@
 <p>也可以获取到组件内的属性，对组件的属性进行分析</p>
 <p>列举一个场景</p>
 <p>在开发sugar的pagination的时候，当选中的元素不同时要渲染出不一样的页码，这个时候就可以通过这种方式来进行测试来保证各种场景的正确性，其中还有选中元素偏离等小逻辑，可以防止后边的同学开发写错</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>前端自动化测试整体大致分为以下四类：单元测试、集成测试、ui测试、端到端(e2e)测试/功能测试，虽各有场景，但也在“不同阶段“各有优劣。这里必须强调是“不同阶段”，才会产生不同的选择优劣，因为每一种自动化测试本身，都有其实际不可替代的场景。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>前端自动化测试整体大致分为以下四类：单元测试、集成测试、ui测试、端到端(e2e)测试&#x2F;功能测试，虽各有场景，但也在“不同阶段“各有优劣。这里必须强调是“不同阶段”，才会产生不同的选择优劣，因为每一种自动化测试本身，都有其实际不可替代的场景。</p>
 <p><strong>1、单元测试</strong><br>单元测试：是指对应用中的最小可测试单元进行检查和验证，通常指的是独立测试单个函数。<br>举一个场景：你现在要改造一个老前端框架，并根据其开发一个向后兼容的新框架。此时老框架针对其内部API函数，写了充分的单测用例。那么，在开发新框架时，直接运行老前端框架的单测用例，偌所有测试用例都通过(PASS)，则可快速保证内部API函数的一致性，快速验证了所有功能场景。</p>
 <p>前端单元测试，是所有类型的前端自动化测试中成本较低，且90%以上前端逻辑场景都可覆盖的，非常有效的自动化测试手段。</p>
 <p><strong>2、集成测试</strong><br>集成测试：就是测试应用中完全不同的模块(组件)间，如何集成、如何一起工作。这和它的名字一致，用来确保不同组件间互相合作的正确性。</p>
 <p>举一个场景：测试在接收到特定的 post 请求以后，数据库会添加对应的记录，那么这就是集成测试，而不是单元测试。 远端发起post请求的服务 和 数据库，就是完全不同的模块。</p>
 <p><strong>3、UI 测试</strong><br>UI 测试：是对图形交互界面的测试。UI层是用户使用产品的入口，所有功能通过这一层提供给用户。<br>举一个例子：现在你要对比，“特定页面的视觉样式”是否严格满足“设计师产出的视觉稿”，就涉及到了ui测试。一般会涉及到UI界面的快照(界面截图)对比等。</p>
-<p><strong>4、端到端(e2e)测试</strong><br>端到端(e2e)测试/功能测试：是站在用户角度的测试，把我们的程序看成是一个黑盒子，用来确保整个应用会按照用户期望的那样运行。</p>
+<p><strong>4、端到端(e2e)测试</strong><br>端到端(e2e)测试&#x2F;功能测试：是站在用户角度的测试，把我们的程序看成是一个黑盒子，用来确保整个应用会按照用户期望的那样运行。</p>
 <p>不关心代码内部的实现，只负责打开浏览器，把测试用例中设置的内容在页面上输入一遍，看是不是得到想要得到的结果。</p>
 <p><strong>适当把单元测试，集成测试、UI测试和e2e测试，按照发布上线前的不同阶段进行互相隔离后，可以在开发的不同阶段分别运行它们，进而全面的保障应用的稳定性。</strong></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://yxsgithub.github.io/hexo/2021/01/21/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%881%EF%BC%89/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/hexo/images/avatar.gif">
-      <meta itemprop="name" content="yuxiao">
-      <meta itemprop="description" content="振翅">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Moonkin's Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/hexo/2021/01/21/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%881%EF%BC%89/" class="post-title-link" itemprop="url">自动化测试学习笔记（1）</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-01-21 18:53:42" itemprop="dateCreated datePublished" datetime="2021-01-21T18:53:42+08:00">2021-01-21</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-06-09 10:32:24" itemprop="dateModified" datetime="2025-06-09T10:32:24+08:00">2025-06-09</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/hexo/categories/%E5%B7%A5%E5%85%B7%E5%88%86%E4%BA%AB/" itemprop="url" rel="index"><span itemprop="name">工具分享</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/hexo/categories/%E5%B7%A5%E5%85%B7%E5%88%86%E4%BA%AB/%E6%8F%92%E4%BB%B6%E5%88%86%E4%BA%AB/" itemprop="url" rel="index"><span itemprop="name">插件分享</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本篇是讲述如何对 js方法进行自动化测试</p>
-<p>产生这个需求是因为之前的jsbridge开发，需要稳定演进api，并保证之后的改动不出错，所以需要引进自动化测试的内容用于自测，降低开发自测成本</p>
-<p>选用的框架是 Mocha.js 和chai.js</p>
-<h2 id="开始使用"><a href="#开始使用" class="headerlink" title="开始使用"></a>开始使用</h2><h3 id="首先准备工具"><a href="#首先准备工具" class="headerlink" title="首先准备工具"></a>首先准备工具</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;name&quot;: &quot;mocha-and-chai&quot;,</span><br><span class="line">  &quot;version&quot;: &quot;1.0.0&quot;,</span><br><span class="line">  &quot;dependencies&quot;: &#123;</span><br><span class="line">    &quot;babel-polyfill&quot;: &quot;^6.26.0&quot;,</span><br><span class="line">    &quot;chai&quot;: &quot;^4.2.0&quot;,</span><br><span class="line">    &quot;mocha&quot;: &quot;^6.1.4&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;scripts&quot;: &#123;</span><br><span class="line">    &quot;test&quot;: &quot;node ./node_modules/mocha/bin/mocha --require babel-core/register ./test/LotteryCalculation.test&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;devDependencies&quot;: &#123;</span><br><span class="line">    &quot;babel-core&quot;: &quot;^6.26.3&quot;,</span><br><span class="line">    &quot;babel-preset-es2015&quot;: &quot;^6.24.1&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>其中babel是帮我们 es6转es5。</p>
-<p>mocha是一个功能丰富的javascript测试框架。</p>
-<p>Chai是一个用于node和浏览器的BDD / TDD断言库，可以与任何javascript测试框架搭配使用。</p>
-<p>这些准备好之后就可以准备开始一个单元测试了</p>
-<h3 id="准备一个待测试的方法"><a href="#准备一个待测试的方法" class="headerlink" title="准备一个待测试的方法"></a>准备一个待测试的方法</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @param type</span><br><span class="line"> * @param a &#123;number&#125;</span><br><span class="line"> * @param b &#123;number&#125;</span><br><span class="line"> * @returns &#123;string&#125;</span><br><span class="line"> */</span><br><span class="line">export default function (type, a, b) &#123;</span><br><span class="line">    switch (type) &#123;</span><br><span class="line">        case &quot;+&quot;:</span><br><span class="line">            return a + b;</span><br><span class="line">        case &quot;-&quot;:</span><br><span class="line">            return a - b;</span><br><span class="line">        case &quot;*&quot;:</span><br><span class="line">            return a * b;</span><br><span class="line">        case &quot;/&quot;:</span><br><span class="line">            return a / b;</span><br><span class="line">        default:</span><br><span class="line">            return null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>有这样一个方法，根据type值来计算ab的加减乘除,我们来对他进行测试</p>
-<p>这个时候首先要用mocha.js，我理解mocha是帮我们管理我们的测试任务的，所以下面是这个样子</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">describe(&#x27;test&#x27;, function () &#123;</span><br><span class="line">    it(&#x27;should get right value&#x27;, function () &#123;</span><br><span class="line">      </span><br><span class="line">    &#125;);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>这块不需要引入mocha的包，因为我们会用mocha来运行它，describe是描述一个总任务，it则是用来描述一个小的任务项</p>
-<img src="/hexo/2021/01/21/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%881%EF%BC%89/WX20210121-204359@2x.png" class="">
-
-<p>下一步是测试我们的方法</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">describe(&#x27;test&#x27;, function () &#123;</span><br><span class="line">    it(&#x27;should get right value&#x27;, function () &#123;</span><br><span class="line">         expect(MochaTestFun(&#x27;+&#x27;,1,1)).to.equal(2)</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>这个时候就轮到了chai.js中的expect上场。expect是BDD风格（Behavior Driven Development,行为驱动开发）的，使用链式语言来组织断言。</p>
-<p>断言库在测试中很重要，是用来帮我们判断某些行为。例如判断类型，值的比较，错误捕获。通常情况下断言库都比较与自然语言相通</p>
-<p>在这段测试语句里面我期望方法的结果为2</p>
-<p>然后就是批量写一些测试数据然后进行批量测试</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">import MochaTestFun from &quot;../app/MochaTestFun&quot;;</span><br><span class="line">import &#123;expect&#125; from &quot;chai&quot;</span><br><span class="line">let testDataList=[</span><br><span class="line">    &#123;</span><br><span class="line">        name:&quot;a+b&quot;,</span><br><span class="line">        type:&#x27;+&#x27;,</span><br><span class="line">        a:1,b:1,</span><br><span class="line">        value:2</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        name:&quot;a-b&quot;,</span><br><span class="line">        type:&#x27;-&#x27;,</span><br><span class="line">        a:1,b:1,</span><br><span class="line">        value:0</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        name:&quot;a*b&quot;,</span><br><span class="line">        type:&#x27;*&#x27;,</span><br><span class="line">        a:1,b:1,</span><br><span class="line">        value:1</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        name:&quot;a/b&quot;,</span><br><span class="line">        type:&#x27;/&#x27;,</span><br><span class="line">        a:1,b:1,</span><br><span class="line">        value:1</span><br><span class="line">    &#125;,</span><br><span class="line">]</span><br><span class="line">describe(&#x27;test&#x27;, function () &#123;</span><br><span class="line">    it(&#x27;should get right value&#x27;, function () &#123;</span><br><span class="line">        for (let i = 0; i &lt; testDataList.length; i++) &#123;</span><br><span class="line">            const item = testDataList[i];</span><br><span class="line">            expect(MochaTestFun(item.type,item.a,item.b)).to.equal(item.value)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>然后有的同学就有疑问，这样做的好处都有啥呢？</p>
-<p>代码刚写出来的时候自测完基本不会出问题，但是呢，产品经理总要改需求，比如加减乘除最大结果不得超过100</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">export default function (type, a, b) &#123;</span><br><span class="line">    switch (type) &#123;</span><br><span class="line">        case &quot;+&quot;:</span><br><span class="line">            return Math.min(a + b,100);</span><br><span class="line">        case &quot;-&quot;:</span><br><span class="line">            return Math.min(a - b,100);</span><br><span class="line">        case &quot;*&quot;:</span><br><span class="line">            return Math.min(a * b,100);</span><br><span class="line">        case &quot;/&quot;:</span><br><span class="line">            return Math.min(a / b,100);</span><br><span class="line">        default:</span><br><span class="line">            return null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>然后我们就可以补充相应的测试用例</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">       name:&quot;加减乘除的结果不得超过一百&quot;,</span><br><span class="line">       type:&#x27;+&#x27;,</span><br><span class="line">       a:100,b:1,</span><br><span class="line">       value:100</span><br><span class="line"> &#125;,</span><br></pre></td></tr></table></figure>
-
-<p>当其他同学更改这块代码的逻辑之后，跑一下测试用例，就不会影响之前的逻辑，一些奇怪的写法导致的结果也会被保存。保证了代码上线之后的安全。</p>
-<p>实际上mocha和chai可以做的更多，可以查看</p>
-<p><a target="_blank" rel="noopener" href="https://mochajs.cn/#getting-started">https://mochajs.cn/#getting-started</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.chaijs.com/api/">https://www.chaijs.com/api/</a></p>
 
       
     </div>
@@ -1199,7 +1157,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/hexo/archives/">
         
-          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-count">16</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
